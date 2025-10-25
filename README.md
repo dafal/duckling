@@ -1,6 +1,41 @@
 ![Duckling Logo](https://github.com/facebook/duckling/raw/main/logo.png)
 
-# Duckling [![Support Ukraine](https://img.shields.io/badge/Support-Ukraine-FFD500?style=flat&labelColor=005BBB)](https://opensource.fb.com/support-ukraine) [![Build Status](https://travis-ci.org/facebook/duckling.svg?branch=master)](https://travis-ci.org/facebook/duckling)
+# Duckling - Past Date Bias Fork
+
+> **Note**: This is a modified fork of [Facebook's Duckling](https://github.com/facebook/duckling) that **prefers past dates over future dates** when parsing ambiguous time expressions.
+
+## What's Different?
+
+The original Duckling has a **future bias** - when you parse "Monday", it returns next Monday. This fork reverses that behavior:
+
+- **"Monday"** → Returns **last Monday** (not next Monday)
+- **"Friday"** → Returns **last Friday** (not next Friday)
+- **"March"** → Returns **last March** (not next March)
+- **"next Monday"** → Still returns next Monday (explicit future markers work)
+- **"last Monday"** → Still returns last Monday (explicit past markers work)
+
+### Use Case
+
+This fork is ideal for applications that primarily deal with historical data, logs, retrospectives, or any scenario where users typically refer to past events.
+
+### Docker Image
+
+A pre-built Docker image is available on Docker Hub:
+
+```bash
+docker pull dafal/duckling-past:latest
+docker run -p 8000:8000 dafal/duckling-past:latest
+```
+
+### Changes Made
+
+The modification is minimal and surgical - only the date resolution logic in `Duckling/Time/Types.hs` was changed to prefer past dates when both past and future candidates exist. See the commit history for details.
+
+---
+
+# Original Duckling Documentation
+
+[![Support Ukraine](https://img.shields.io/badge/Support-Ukraine-FFD500?style=flat&labelColor=005BBB)](https://opensource.fb.com/support-ukraine) [![Build Status](https://travis-ci.org/facebook/duckling.svg?branch=master)](https://travis-ci.org/facebook/duckling)
 
 Duckling is a Haskell library that parses text into structured data.
 

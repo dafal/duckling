@@ -106,12 +106,12 @@ instance Resolve TimeData where
   type ResolvedValue TimeData = TimeValue
   resolve _ Options {withLatent = False} TimeData {latent = True} = Nothing
   resolve context _ TimeData {timePred, latent, notImmediate, direction, holiday} = do
-    value <- case future of
-      [] -> listToMaybe past
-      ahead:nextAhead:_
-        | notImmediate && isJust (timeIntersect ahead refTime) -> Just nextAhead
-      ahead:_ -> Just ahead
-    values <- Just $ take 3 $ if List.null future then past else future
+    value <- case past of
+      [] -> listToMaybe future
+      ago:nextAgo:_
+        | notImmediate && isJust (timeIntersect ago refTime) -> Just nextAgo
+      ago:_ -> Just ago
+    values <- Just $ take 3 $ if List.null past then future else past
     Just $ case direction of
       Nothing -> (TimeValue (timeValue tzSeries value)
         (map (timeValue tzSeries) values) holiday, latent)
